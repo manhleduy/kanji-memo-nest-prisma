@@ -1,0 +1,43 @@
+services:
+
+  database-postgres:
+      image: postgres:16.1
+      restart: unless-stopped
+      environment:
+        - POSTGRES_DB=${POSTGRES_DB}
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        
+      ports:
+        - '${POSTGRES_PORT_EXPOSE}:5432'
+      volumes:
+        - kanji:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - DB_HOST=${POSTGRES_HOST}
+      - DB_PORT=${POSTGRES_PORT}
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    ports: 
+      - ${BACKEND_PORT}:8080
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${FRONTEND_PORT}:5173
+    environment:
+      - BACKEND_PORT=${BACKEND_PORT}
+
+volumes:
+    kanji:
+  
+  
