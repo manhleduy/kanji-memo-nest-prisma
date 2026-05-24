@@ -9,7 +9,7 @@ services:
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         
       ports:
-        - '${POSTGRES_PORT_EXPOSE}:5432'
+        - '${POSTGRES_PORT}:5432'
       volumes:
         - kanji:/var/lib/postgresql/data
 
